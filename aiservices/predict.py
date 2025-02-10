@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from sklearn.model_selection import train_test_split
 from preprocessing.data_loader import load_stock_data
 from preprocessing.feature_engineering import preprocess_data, prepare_data_for_training
-from models.lstm_model import train_holt_winters_model as train_lstm_model, predict_holt_winters as predict_lstm
+from models.lstm_model import train_lstm_model, predict_lstm
 from models.xgboost_model import train_xgboost_model, predict_xgboost
 from models.hybrid_model import combine_predictions
 from flask_cors import CORS
@@ -74,22 +74,29 @@ def predict():
         print("Shape of y_test:", y_test.shape)
 
         # Step 6: Train models
-        lstm_model = train_lstm_model(X_train, y_train)
+        lstm_model = train_lstm_model(stock_data)  # Train LSTM on Close prices
         xgb_model = train_xgboost_model(X_train, y_train)
 
-        # Step 7: Predictions
-        lstm_prediction = predict_lstm(lstm_model, X_test)
-        xgb_prediction = predict_xgboost(xgb_model, X_test)
+        # Debugging: Print feature names stored in the XGBoost model
+        print("Feature names in XGBoost model:", xgb_model.get_booster().feature_names)
 
+        # Step 7: Predictions
+        X_test = pd.DataFrame(X_test, columns=xgb_model.get_booster().feature_names)  # Align column names
+        lstm_prediction = predict_lstm(lstm_model, steps=1)  # Predict using LSTM
+        xgb_prediction = predict_xgboost(xgb_model, X_test)  # Predict using XGBoost
+
+        # Combine predictions
         combined_prediction = combine_predictions(lstm_prediction, xgb_prediction)
-        print(f"Combined Prediction: {combined_prediction}")  # Log the prediction
+        print("LSTM Prediction:", lstm_prediction)
+        print("XGBoost Prediction:", xgb_prediction)
+        print("Combined Prediction:", combined_prediction)
 
         # Step 8: Return results
         return jsonify({
             "ticker": ticker,
-            "lstm_prediction": lstm_prediction,
-            "xgb_prediction": xgb_prediction,
-            "combined_prediction": combined_prediction
+            "lstm_prediction": float(lstm_prediction),  # Ensure scalar value
+            "xgb_prediction": float(np.mean(xgb_prediction)),  # Ensure scalar value
+            "combined_prediction": float(combined_prediction)  # Ensure scalar value
         })
 
     except Exception as e:

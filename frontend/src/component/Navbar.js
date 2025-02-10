@@ -22,21 +22,17 @@ const Navbar = ({ totalInvestmentPrice }) => {
     navigate(path);
   };
 
-
   const logout = async () => {
     try {
-      await axios.get('http://localhost:6005/logout', { withCredentials: true });
-
-      localStorage.removeItem('user');
-      sessionStorage.removeItem('user');
-
-      setUserdata(null);
-      fetchUser(); 
-      navigate('/');
+        await axios.get('http://localhost:6005/logout', { withCredentials: true });
+        localStorage.removeItem('user');
+        sessionStorage.removeItem('user');
+        setUserdata(null);
+        navigate('/'); // Redirect to the login page
     } catch (error) {
-      console.log('Error during logout:', error);
+        console.error('Error during logout:', error.response?.data || error.message);
     }
-  };
+};
 
   // Ensure userdata is not null before accessing displayName
   const displayName = userdata?.displayName || 'Unknown User';

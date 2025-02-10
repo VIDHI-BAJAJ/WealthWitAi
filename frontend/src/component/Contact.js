@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import FAQ from '../component/FAQ'
-import { useForm } from "react-hook-form";
-import useWeb3Forms from "@web3forms/react";
 import Footer from "./Footer";
 import Contact from '../Images/Contact.png'
 
@@ -31,36 +29,7 @@ const ContactUs = () => {
       };
     return (
         <>
-            {/* <div className="relative h-[500px] bg-cover bg-center" style={{ backgroundImage: `url(${Contact})` }}>
-                <div>
-                    <h1 className="text-white  pl-44 pt-28 text-4xl font-bold">Contact Us <br />and Unleash your idea</h1>
-                    <p className='text-white  pl-36 pt-5 text-xl ml-10'>Let's start a conversation. Your feedback matters!</p>
-                    <div className="absolute top-24 right-60">
-                        <div className='bg-white h-96 w-96 rounded-md shadow-md'>
-                            <div className='pt-5 pl-6'>
-                            <form onSubmit={onSubmit}>
-                             <div className='flex flex-col'>
-                             <label>
-                             <h5>Name:</h5> 
-                             <input type="text"name="name" className="h-9 w-80 mt-3 rounded-sm shadow-md bg-gray-100 border border-gray-300"
-/> </label> 
-                             </div>
-                             <div className='flex flex-col mt-3'>
-                             <label>
-                             <h5 >Email:</h5> 
-                             <input type="email" name="email" className="h-9 w-80 mt-3 rounded-sm shadow-md bg-gray-100 border border-gray-300"/> </label> 
-                             </div>
-                             <div className='flex flex-col mt-3'>
-                                <h5>Message:</h5>
-        <textarea name="message" className="h-12 w-80 mt-3 rounded-sm shadow-md bg-gray-100 border border-gray-300"></textarea>
-        </div>
-        <button type="submit" className="bg-customBlue text-black mt-12 h-10 w-52 rounded-sm shadow-md ml-16">Submit</button>
-      </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> */}
+           
             <div
   className="relative h-[500px] bg-cover bg-center"
   style={{ backgroundImage: `url(${Contact})` }}

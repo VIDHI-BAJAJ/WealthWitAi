@@ -9,25 +9,6 @@ const Login = () => {
   const { setUserdata, fetchUser } = useContext(AuthContext);
   const navigate = useNavigate();
   
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-
-//     try {
-//         const response = await axios.post("http://localhost:6005/auth/login/success", { email, password });
-//         console.log("Full Login Response:", response); // Debugging
-
-//         if (response.data.status) {
-//             setUserdata(response.data.user);
-//             await fetchUser(); 
-//             navigate('/stockmarket');  
-//         } else {
-//             console.log("Navigation condition not met:", response.data);
-//         }
-//     } catch (err) {
-//         console.error("Login Error:", err.response ? err.response.data : err);
-//         alert(err.response?.data?.message || "Login failed");
-//     }
-// };
 
 const handleSubmit = async (e) => {
   e.preventDefault();

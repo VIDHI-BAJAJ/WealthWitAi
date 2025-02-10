@@ -107,14 +107,18 @@ app.get("/login/success", async (req, res) => {
 // User logout route
 app.get('/logout', (req, res) => {
     res.clearCookie('token', { path: '/', httpOnly: true, secure: false, sameSite: 'Lax' });
+
     if (req.session) {
         req.session.destroy(err => {
             if (err) {
+                console.error('Session destruction failed:', err);
                 return res.status(500).json({ message: 'Logout failed' });
             }
+            console.log('Session destroyed successfully');
             res.status(200).json({ message: 'Logout successful' });
         });
     } else {
+        console.log('No session found');
         res.status(200).json({ message: 'No session found' });
     }
 });
@@ -144,20 +148,6 @@ app.post("/submit-data", async (req, res) => {
     }
 });
 
-
-
-// **Stock Market API Endpoint**
-// app.get("/api/stock/:symbol", async (req, res) => {
-//     try {
-//         const symbol = req.params.symbol; 
-//         const queryOptions = { period1: '2020-01-01', interval: '1d' }; 
-//         const result = await yahooFinance.historical(symbol, queryOptions);
-//         res.json(result);
-//     } catch (error) {
-//         console.error("Error fetching stock data:", error);
-//         res.status(500).json({ message: "Error fetching stock data" });
-//     }
-// });
 
 app.get("/api/stock/:symbol", async (req, res) => {
     try {

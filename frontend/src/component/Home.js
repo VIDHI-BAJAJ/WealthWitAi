@@ -1,4 +1,4 @@
-import React , { useEffect, useState } from 'react';
+import React  from 'react';
 // import axios from "axios";
 import Footer from './Footer';
 import Banner from '../Images/BannerImage.png';

@@ -1,37 +1,3 @@
-# import pandas as pd
-# import numpy as np
-
-# def add_moving_averages(data, windows=[5, 10, 20]):
-#     """
-#     Add moving averages to the dataset.
-#     """
-#     for window in windows:
-#         data[f'SMA_{window}'] = data['Close'].rolling(window=window).mean()
-#     return data
-
-# def add_rsi(data, window=14):
-#     """
-#     Add Relative Strength Index (RSI) to the dataset.
-#     """
-#     delta = data['Close'].diff()
-#     gain = (delta.where(delta > 0, 0)).rolling(window=window).mean()
-#     loss = (-delta.where(delta < 0, 0)).rolling(window=window).mean()
-#     rs = gain / loss
-#     data['RSI'] = 100 - (100 / (1 + rs))
-#     return data
-
-# def preprocess_data(data):
-#     """
-#     Preprocess the stock data by adding technical indicators.
-#     """
-#     # Add moving averages
-#     data = add_moving_averages(data, windows=[5, 10, 20])
-    
-#     # Add RSI
-#     data = add_rsi(data)
-    
-#     # Drop rows with missing values
-#     data.dropna(inplace=True)
 import pandas as pd
 import numpy as np
 

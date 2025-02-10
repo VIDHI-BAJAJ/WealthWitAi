@@ -11,109 +11,79 @@ const Dashboard = () => {
   // Polling interval (5 seconds)
   const POLLING_INTERVAL = 5000;
 
- 
-  // const fetchStockData = useCallback(async () => {
-  //   const updatedStocksData = await Promise.all(
-  //     stocks.map(async (stock) => {
-  //       try {
-  //         // Fetch real-time price from the backend API
-  //         const backendResponse = await axios.get(
-  //           `http://localhost:6005/api/stock/${stock.name}`
-  //         );
-  //         console.log("Backend Response:", backendResponse.data);
-  
-  //         // Extract the latest price from the historical data
-  //         const historicalData = backendResponse.data;
-  //         const latestPrice =
-  //           historicalData.length > 0
-  //             ? historicalData[historicalData.length - 1].close
-  //             : null;
-  
-  //         if (latestPrice !== null) {
-  //           localStorage.setItem(`lastClosePrice_${stock.name}`, latestPrice);
-  //         }
-  
-  //         // Calculate the current price
-  //         const currentPrice = stock.qty * latestPrice;
-  
-  //         // Fetch AI prediction using the /api/predict endpoint
-  //         const predictResponse = await axios.post("http://localhost:6005/api/predict", {
-  //           ticker: stock.name, // Automatically use the stock name as the ticker
-  //         });
-  //         console.log("Prediction Response:", predictResponse.data);
-  
-  //         // Extract the combined prediction from the response
-  //         const aiPrediction = predictResponse.data.combined_prediction || "N/A";
-  
-  //         return {
-  //           ...stock,
-  //           stockValue: latestPrice?.toFixed(2) || "N/A",
-  //           currentPrice: currentPrice?.toFixed(2) || "N/A",
-  //           aiPrediction: aiPrediction?.toFixed(2) || "N/A", // Add AI prediction
-  //         };
-  //       } catch (error) {
-  //         console.error("Error fetching stock data for", stock.name, ":", error);
-  //         return {
-  //           ...stock,
-  //           stockValue: "N/A",
-  //           currentPrice: "N/A",
-  //           aiPrediction: "N/A", // Default value if prediction fails
-  //         };
-  //       }
-  //     })
-  //   );
-  
-  //   setUpdatedStocks(updatedStocksData);
-  // }, [stocks]);
-  
   const fetchStockData = useCallback(async () => {
     const updatedStocksData = await Promise.all(
-      stocks.map(async (stock) => {
+      updatedStocks.map(async (stock) => {
         try {
           // Fetch real-time price from the backend API
           const backendResponse = await axios.get(
             `http://localhost:6005/api/stock/${stock.name}`
           );
           console.log("Backend Response for", stock.name, ":", backendResponse.data);
-  
+
           // Extract the latest price from the historical data
           const historicalData = backendResponse.data;
+          const lastClosePrice = parseFloat(localStorage.getItem(`lastClosePrice_${stock.name}`));
           const latestPrice =
             historicalData.length > 0
               ? historicalData[historicalData.length - 1].close
-              : null;
-  
+              : lastClosePrice || null;
+
           if (latestPrice !== null) {
             localStorage.setItem(`lastClosePrice_${stock.name}`, latestPrice);
           }
-  
+
           // Calculate the current price
           const currentPrice = stock.qty * latestPrice;
-  
+
+          // Fetch AI prediction using the /api/predict endpoint
+          // const predictResponse = await axios.post("http://localhost:6005/api/predict", {
+          //   ticker: stock.name, // Ensure the ticker is sent correctly
+          // });
+          // console.log("Prediction Response for", stock.name, ":", predictResponse.data);
+
+          // // Validate the prediction response
+          // if (predictResponse.data.ticker !== stock.name) {
+          //   throw new Error(`Mismatched ticker: expected ${stock.name}, got ${predictResponse.data.ticker}`);
+          // }
+
+          // // Extract the combined prediction from the response
+          // const aiPrediction = predictResponse.data.combined_prediction || "N/A";
+
+          // Return updated stock data
           return {
             ...stock,
-            stockValue: latestPrice?.toFixed(2) || "N/A",
-            currentPrice: currentPrice?.toFixed(2) || "N/A",
+            stockValue: typeof latestPrice === "number" && !isNaN(latestPrice) ? latestPrice.toFixed(2) : "N/A",
+            currentPrice: typeof currentPrice === "number" && !isNaN(currentPrice) ? currentPrice.toFixed(2) : "N/A",
+            // aiPrediction: typeof aiPrediction === "number" && !isNaN(aiPrediction) ? aiPrediction.toFixed(2) : "N/A",
           };
         } catch (error) {
-          console.error("Error fetching stock data for", stock.name, ":", error.message);
-          return {
-            ...stock,
-            stockValue: "N/A",
-            currentPrice: "N/A",
-          };
+          console.error("Error fetching stock data for", stock.name, ":", error);
+
+          // Preserve existing data if the API call fails
+          return stock;
         }
       })
     );
-  
-    setUpdatedStocks(updatedStocksData);
-  }, [stocks]);
+
+    // Update state conditionally based on stock name
+    setUpdatedStocks((prevStocks) =>
+      prevStocks.map((prevStock) => {
+        const updatedStock = updatedStocksData.find((stock) => stock.name === prevStock.name);
+        return updatedStock || prevStock; // Preserve existing data if no update is available
+      })
+    );
+  }, [updatedStocks]);
 
   useEffect(() => {
     let intervalId;
+
     // Always fetch stock data
     fetchStockData();
+
+    // Set up polling
     intervalId = setInterval(fetchStockData, POLLING_INTERVAL);
+
     return () => clearInterval(intervalId);
   }, [stocks, fetchStockData]);
 
@@ -171,7 +141,7 @@ const Dashboard = () => {
               <th className="border p-2">Investment Price</th>
               <th className="border p-2">Present Stock Value</th>
               <th className="border p-2">Current Price</th>
-              <th className="border p-2">AI Prediction</th>
+              {/* <th className="border p-2">AI Prediction</th> */}
               <th className="border p-2">Actions</th>
             </tr>
           </thead>
@@ -180,11 +150,11 @@ const Dashboard = () => {
               <tr key={index} className="border">
                 <td className="border p-2">{item.name}</td>
                 <td className="border p-2">{item.qty}</td>
-                <td className="border p-2">{item.investstockvalue}</td>
+                <td className="border p-2">{item.stockValue || "N/A"}</td>
                 <td className="border p-2">{item.price}</td>
                 <td className="border p-2">{item.stockValue || "N/A"}</td>
                 <td className="border p-2">{item.currentPrice || "N/A"}</td>
-                <td className="border p-2">{item.aiPrediction || "N/A"}</td>
+                {/* <td className="border p-2">{item.aiPrediction || "N/A"}</td> */}
                 <td className="border p-2">
                   <button
                     className="bg-red-500 text-white px-2 py-1 rounded"
