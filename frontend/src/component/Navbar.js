@@ -88,6 +88,10 @@ const Navbar = ({ totalInvestmentPrice }) => {
                   {/* Dropdown Menu */}
                   {isOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg">
+                      <li><Link to="/userprofile" className="block w-full text-left px-4 py-2 text-gray-700">User Profile</Link></li>
+                      <hr/>
+                      <li><Link to="/predicteddata" className="block w-full text-left px-4 py-2 text-gray-700">User Predicted</Link></li>
+                      <hr/>
                       <button
                         onClick={logout}
                         className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
@@ -120,6 +124,7 @@ const Navbar = ({ totalInvestmentPrice }) => {
                   <li><button onClick={() => handleNavigation('/dashboard')} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Dashboard</button></li>
                   <li><button onClick={() => handleNavigation('/Aiprediction')} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">AI Prediction</button></li>
                   <li><button onClick={() => handleNavigation('/profile')} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">User Profile</button></li>
+                  <li><button onClick={() => handleNavigation('/predicteddata')} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">User Predicted</button></li>
                   <li><button onClick={logout} className="block w-24 bg-customBlue text-left ml-2 px-4 py-2 text-black hover:bg-gray-100">Logout</button></li>
                 </>
               ) : (

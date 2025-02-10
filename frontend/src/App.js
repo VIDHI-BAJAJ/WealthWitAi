@@ -18,6 +18,9 @@ import Input from "./component/Input.js";
 import StockCrypto from './component/StockCrypto.js';
 import InvestmentMetrics from './component/InvestmentMetrics.js';
 import Market from './component/Market.js';
+import UserProfile from './component/UserProfile.js';
+import Predicteddata from './component/Predicteddata.js';
+
 const App = () => {
   return (
     <AuthProvider>
@@ -40,6 +43,8 @@ const App = () => {
           <Route path ="/stockcrypto" element = {<StockCrypto/>}/>
           <Route path ="/investmentmetrics" element = {<InvestmentMetrics/>}/>
           <Route path ="/market" element = {<Market/>}/>
+          <Route path ="/userprofile" element = {<UserProfile/>}/>
+          <Route path ="/predicteddata" element = {<Predicteddata/>}/>
         </Routes>
       </Router>
     </StockProvider>

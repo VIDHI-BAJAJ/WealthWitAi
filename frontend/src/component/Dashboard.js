@@ -37,25 +37,25 @@ const Dashboard = () => {
           const currentPrice = stock.qty * latestPrice;
 
           // Fetch AI prediction using the /api/predict endpoint
-          // const predictResponse = await axios.post("http://localhost:6005/api/predict", {
-          //   ticker: stock.name, // Ensure the ticker is sent correctly
-          // });
-          // console.log("Prediction Response for", stock.name, ":", predictResponse.data);
+          const predictResponse = await axios.post("http://localhost:6005/api/predict", {
+            ticker: stock.name, // Ensure the ticker is sent correctly
+          });
+          console.log("Prediction Response for", stock.name, ":", predictResponse.data);
 
-          // // Validate the prediction response
-          // if (predictResponse.data.ticker !== stock.name) {
-          //   throw new Error(`Mismatched ticker: expected ${stock.name}, got ${predictResponse.data.ticker}`);
-          // }
+          // Validate the prediction response
+          if (predictResponse.data.ticker !== stock.name) {
+            throw new Error(`Mismatched ticker: expected ${stock.name}, got ${predictResponse.data.ticker}`);
+          }
 
-          // // Extract the combined prediction from the response
-          // const aiPrediction = predictResponse.data.combined_prediction || "N/A";
+          // Extract the combined prediction from the response
+          const aiPrediction = predictResponse.data.combined_prediction || "N/A";
 
           // Return updated stock data
           return {
             ...stock,
             stockValue: typeof latestPrice === "number" && !isNaN(latestPrice) ? latestPrice.toFixed(2) : "N/A",
             currentPrice: typeof currentPrice === "number" && !isNaN(currentPrice) ? currentPrice.toFixed(2) : "N/A",
-            // aiPrediction: typeof aiPrediction === "number" && !isNaN(aiPrediction) ? aiPrediction.toFixed(2) : "N/A",
+            aiPrediction: typeof aiPrediction === "number" && !isNaN(aiPrediction) ? aiPrediction.toFixed(2) : "N/A",
           };
         } catch (error) {
           console.error("Error fetching stock data for", stock.name, ":", error);
@@ -141,7 +141,7 @@ const Dashboard = () => {
               <th className="border p-2">Investment Price</th>
               <th className="border p-2">Present Stock Value</th>
               <th className="border p-2">Current Price</th>
-              {/* <th className="border p-2">AI Prediction</th> */}
+              <th className="border p-2">AI Prediction</th>
               <th className="border p-2">Actions</th>
             </tr>
           </thead>
@@ -154,7 +154,7 @@ const Dashboard = () => {
                 <td className="border p-2">{item.price}</td>
                 <td className="border p-2">{item.stockValue || "N/A"}</td>
                 <td className="border p-2">{item.currentPrice || "N/A"}</td>
-                {/* <td className="border p-2">{item.aiPrediction || "N/A"}</td> */}
+                <td className="border p-2">{item.aiPrediction || "N/A"}</td>
                 <td className="border p-2">
                   <button
                     className="bg-red-500 text-white px-2 py-1 rounded"
