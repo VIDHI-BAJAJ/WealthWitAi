@@ -10,31 +10,30 @@ const Login = () => {
   const navigate = useNavigate();
   
 
+
 const handleSubmit = async (e) => {
   e.preventDefault();
-
   try {
-      // First, login to get the token and user data
       const loginResponse = await axios.post(
-          "http://localhost:6005/auth/login", 
+          "http://localhost:6005/auth/login",
           { email, password },
           { withCredentials: true }
       );
-      
-      console.log("Login Response:", loginResponse.data); // Debug log
 
+      console.log("Login Response:", loginResponse.data);
       if (loginResponse.data.status) {
           const userData = loginResponse.data.user;
+          console.log("User Data:", userData);
           setUserdata(userData);
-          navigate('/stockmarket');
+          navigate('/stockcrypto');
+      } else {
+          alert(loginResponse.data.message || "Login failed");
       }
   } catch (err) {
       console.error("Login Error:", err.response?.data || err);
       alert(err.response?.data?.message || "Login failed");
   }
 };
-
-
 
   const loginWithGoogle = () => {
     window.open("http://localhost:6005/auth/google/callback", "_self");

@@ -36,7 +36,7 @@ const Navbar = ({ totalInvestmentPrice }) => {
 
   // Ensure userdata is not null before accessing displayName
   const displayName = userdata?.displayName || 'Unknown User';
-
+ 
   return (
     <nav className="bg-white shadow-md">
       <div className="max-w-6xl mx-auto px-4">
@@ -64,6 +64,7 @@ const Navbar = ({ totalInvestmentPrice }) => {
               )}
             </button>
           </div>
+          
           {/* Desktop Menu */}
           <ul className="hidden md:flex items-center space-x-7">
             {userdata ? (
@@ -78,7 +79,7 @@ const Navbar = ({ totalInvestmentPrice }) => {
                     onClick={() => setIsOpen(!isOpen)}
                     className="flex items-center space-x-2 text-black px-3 py-2 rounded-full"
                   >
-                    <ProfileImage displayName={displayName} />
+                    <ProfileImage displayName={displayName}/>
                     <svg className="w-2 h-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>

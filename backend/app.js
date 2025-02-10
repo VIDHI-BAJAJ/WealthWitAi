@@ -63,12 +63,19 @@ passport.use(
         try {
             let user = await User.findOne({ googleId: profile.id });  
             if (!user) {
+                // user = new User({
+                //     googleId: profile.id,
+                //     displayName: profile.displayName,
+                //     email: profile.emails[0].value,
+                //     image: profile.photos[0].value
+                // });
                 user = new User({
-                    googleId: profile.id,
-                    displayName: profile.displayName,
-                    email: profile.emails[0].value,
-                    image: profile.photos[0].value
-                });
+                    username: name, // Use the full name as username
+                    email,
+                    googleId: sub,
+                    displayName: name, // Set displayName to the full name
+                    image: picture,
+                  });
                 await user.save();
             }
             return done(null, user);

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const Signup = ({ switchToLogin }) => {
-  const [username, setUsername] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -14,7 +14,7 @@ const Signup = ({ switchToLogin }) => {
     
   // Send POST request to your backend
   axios
-  .post("http://localhost:6005/auth/signup", { username, email, password })
+  .post("http://localhost:6005/auth/signup", { displayName, email, password })
   .then((response) => {
     console.log("Signup Response:", response.data); 
 
@@ -53,8 +53,8 @@ const Signup = ({ switchToLogin }) => {
             <label className="block text-gray-700 mb-2">Username</label>
             <input
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
